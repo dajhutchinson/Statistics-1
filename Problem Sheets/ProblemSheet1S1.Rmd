@@ -1,0 +1,19 @@
+---
+title: "Problems Sheet 1"
+subtitle: "Statistics 2"
+author: "Dom Hutchinson"
+output:
+  pdf_document: 
+     fig_width: 6
+     fig_height: 4
+  html_notebook: default
+  html_document: default
+  word_document: default
+---
+
+# Question 4
+## Part a)
+```{r}
+xobs<-rexp(10,rate=0.3)
+xobs
+```

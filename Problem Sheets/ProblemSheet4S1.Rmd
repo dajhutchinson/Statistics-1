@@ -1,0 +1,38 @@
+---
+title: "Problems Sheet 4"
+subtitle: "Statistics 1"
+author: "Dom Hutchinson"
+output:
+  pdf_document: 
+     fig_width: 6
+     fig_height: 4
+  html_notebook: default
+  html_document: default
+  word_document: default
+---
+```{r}
+load(url("https://people.maths.bris.ac.uk/~maxca/stats1/stats1.RData"))
+```
+
+# Part B
+## Question 1
+Assume that the lifetime of each tyre is independent & is distributed $\mathcal{N}(\mu,\sigma^2)$ with $\mu$ \& $\sigma$ unknown.  
+There is no disadvantage to the customer if the mean useful lifetime of the tyre is longer than claimed.  
+Define $H_0:\mu=42=\mu_0,\ H_1:\mu<42=\mu_0$ \& the significance level to be $\alpha=0.05$.
+Define the test statistic to be $T(X_1,\dots,X_{10})=\sqrt{n}\left(\frac{\bar{X}-\mu_0}{s}\right)\sim t_{9}$.  
+So $\mathbb{P}(T<t_{obs}|H_0\ true)=\mathbb{P}(T_9<t_{obs})$
+
+```{r}
+mu0=42
+n=length(tyre.lifetimes)
+xBar=mean(tyre.lifetimes)
+s=sd(tyre.lifetimes)
+cat("n=",n," xBar=",xBar," s=",s,sep="")
+
+t_obs=sqrt(n)*((xBar-mu0)/s)
+t_obs
+p=pt(t_obs,n-1)
+p
+```
+Since this test generates a $p$-value of $0.2006597>0.05=\alpha$ there is no evidence to reject $H_0$.  
+Thus, I conclude that the claims of the manufacture are correct.  

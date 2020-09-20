@@ -1,0 +1,67 @@
+---
+title: "Problems Sheet 3"
+subtitle: "Statistics 1"
+author: "Dom Hutchinson"
+output:
+  pdf_document: 
+     fig_width: 6
+     fig_height: 4
+  html_notebook: default
+  html_document: default
+  word_document: default
+---
+# Part A
+
+## Question 2
+
+### a)
+
+```{r}
+xvalues<-rexp(10000,rate=1)
+xsamples<-matrix(xvalues,nrow=1000)
+```
+### b)
+
+```{r}
+sample.mean<-apply(xsamples,1,mean)
+theta.mle<-1/sample.mean
+hist(theta.mle)
+```
+
+### c)
+```{r}
+sample.median=apply(xsamples,1,median)
+tau.mle<-log(2)/theta.mle
+boxplot(sample.median,tau.mle, names=c("Sample Median","MLE"))
+abline(h=log(2))
+```
+
+### d)
+Both calculations produce medians which are practicaly the same as the actual median.
+The sample median calculation has a much larger range & significantly more outliers than that of the maximum likelihood estimate.
+
+### e)
+```{r}
+sample.mean<-mean(sample.median)
+sample.var <-var(sample.median)
+mle.mean   <-mean(tau.mle)
+mle.var    <-var(tau.mle)
+
+sample.mean
+sample.var
+mle.mean
+mle.var
+
+sample.bias=sample.mean-log(2)
+mle.bias   =mle.mean-log(2)
+sample.bias
+mle.bias
+
+sample.mse=sample.var+sample.bias^2
+mle.mse=mle.var+mle.bias^2
+sample.mse
+mle.mse
+log(2)
+```
+
+Both methods have a positive bias in their results, however maximum likelihood estimate has a much lower value. Maximum likelihood estimate has a lower variance & mean-square error

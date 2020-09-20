@@ -1,0 +1,71 @@
+---
+title: "Assessed Problem Sheet 1"
+subtitle: "Statistics 1"
+author: "Dom Hutchinson"
+output:
+  pdf_document: 
+     fig_width: 6
+     fig_height: 4
+  html_notebook: default
+  html_document: default
+  word_document: default
+---
+```{r}
+load(url("https://people.maths.bris.ac.uk/~maxca/stats1/stats1-assignment.RData"))
+```
+
+# Question 4
+```{r}
+compute.ad.test <- function (xs) {
+  len<-length(xs)  # Length of vector
+  sorted<-sort(xs) # Sort vector
+  
+  xBar<-mean(xs)   # Sample mean
+  S<-sd(xs)        # Sample standard deviation
+  
+  summation<-0
+  for (j in 1:len) {                             # Calculate each element of summation
+    scalar<-(2*j-1)/len                          # Scalar of element
+    first<-log(pnorm(sorted[j],xBar,S))          # First ln term
+    second<-log(1-pnorm(sorted[len+1-j],xBar,S)) # Second ln term
+    element<-scalar*(first+second)               # Value of j^th of summation
+    summation<-summation+element                 # Add to summation
+  }
+  
+  T<--length(xs)-summation # Test statistic 
+  return (T)
+}
+compute.ad.test(x1)
+compute.ad.test(x2)
+```
+
+# Question 6
+```{r}
+compute.ad.pvalue <- function (xs) {
+  sampleSize=10  # Size of each sample
+  numSamples=500 # Number of samples
+  
+  xBar<-mean(xs)             # Sample mean
+  s<-sd(xs)                  # Sample standard deviation
+  t_obs<-compute.ad.test(xs) # Observed Statistic
+  
+  gvalues<-rnorm(sampleSize*numSamples,xBar,s)        # Generate values from N(xBar,s)
+  gsamples<-matrix(gvalues,nrow=numSamples)           # Group into samples
+  gsamples.ad.test<-apply(gsamples,1,compute.ad.test) # Calcualate AD statistic for each sample
+  
+  num=sum(gsamples.ad.test>=t_obs) # Number of simulated statistics >= given
+  p=num/numSamples                 # As proportion
+  
+  # Create plots
+  par(mfrow=c(1,2))
+  hist(gsamples.ad.test,main="Histogram of Simulated Statistics")
+  abline(v=t_obs,col="red")
+  qqnorm(gsamples.ad.test)
+  qqline(gsamples.ad.test)
+  
+  return (p)
+}
+
+compute.ad.pvalue(x1)
+compute.ad.pvalue(x2)
+```

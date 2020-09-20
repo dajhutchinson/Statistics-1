@@ -1,0 +1,70 @@
+---
+title: "Problems Sheet 2"
+subtitle: "Statistics 1"
+author: "Dom Hutchinson"
+output:
+  pdf_document: 
+     fig_width: 6
+     fig_height: 4
+  html_notebook: default
+  html_document: default
+  word_document: default
+---
+# Part A
+## Question 2
+```{r}
+source("https://people.maths.bris.ac.uk/~maxca/stats1/downloads/disasters.R")
+gaps<-disasters$gap[2:121]
+```
+
+### Part a)
+```{r}
+p1<-hist(gaps)
+```
+This histogram fits the general shape of an exponential distribution. This suggests an exponential distribution would be a suitable model. This makes sense since we can expect each disaster to occur independently.
+
+### Part b)
+$$
+\begin{array}{rrcl}
+&\mu(gaps)&=&115.2\\
+&m&=&\mathbb{E}(X;\theta)\\
+&&=&\frac{1}{\theta}\\
+\implies&\hat{\theta}&=&\frac{1}{\mu}\\
+&&=&\frac{1}{115.2}\\
+&&=&0.008681
+\end{array}
+$$
+
+### Part c)
+```{r}
+inverseDistribution <- function(y,theta) {
+  val <- -log10(1-y)
+  val <- val/theta
+  return(val)
+}
+
+order<-sort(gaps)
+k<-seq(1,120,1)
+plot(inverseDistribution(k/121,0.008681),order,xlab="Expected",ylab="Sampled")
+abline(0,1,col="red")
+```
+
+## Question 5
+
+$$
+\begin{array}{rrcl}
+&\mathbb{E}(X;\alpha,\lambda)&=&\frac{\alpha}{\lambda}\\
+&\mathbb{E}(X^2;\alpha,\lambda)&=&\frac{\alpha(\alpha+1)}{\lambda^2}\\
+\mathrm{Set}&m_1&=&\frac{\alpha}{\lambda}\\
+&\&\ m_2&=&\frac{\alpha(\alpha+1)}{\lambda^2}\\
+\implies&\alpha&=&\lambda m_1\\
+\implies&m_2&=&\dfrac{\lambda m_1(\lambda m_1+1)}{\lambda^2}\\
+\implies&\lambda^2m_2&=&\lambda^2m_1^2+\lambda m_1\\
+\implies&\hat{\lambda}&=&\dfrac{m_1}{m_2-m_1^2}\\
+\implies&\hat{\alpha}&=&\dfrac{m_1^2}{m_2=m_1^2}
+\end{array}
+$$
+
+# Part B
+
+## Question 2

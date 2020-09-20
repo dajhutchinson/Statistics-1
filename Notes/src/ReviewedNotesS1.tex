@@ -1,0 +1,501 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in, paperwidth=8.3in, paperheight=11.7in]{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[none]{hyphenat}  % Don't hyphen break words at line breaks
+\usepackage[latin1]{inputenc}
+\usepackage{listings}
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+% Setup lstlisting
+\lstset{language=Haskell, mathescape=true, showstringspaces=false}
+
+%Define tikz node shapes
+\tikzstyle{op} = [rectangle, draw, text width=2em, text centered, minimum height=2em]
+\tikzstyle{var} = [regular polygon, regular polygon sides=3, text centered, text width=1.2em, inner sep=0pt, draw]
+
+\begin{document}
+
+\pagestyle{fancy}
+\setlength\parindent{0pt}
+\allowdisplaybreaks
+
+% Counters
+\newcounter{definition}[section]
+\newcounter{example}[section]
+\newcounter{notation}[section]
+\newcounter{proof}[section]
+\newcounter{proposition}[section]
+\newcounter{remark}[section]
+\newcounter{theorem}[section]
+
+% enumerate uses roman
+\setlist[enumerate,1]{label=\roman*)}
+
+% commands
+\newcommand{\eg}{\textit{e.g.} }
+\newcommand{\EG}{\underline{E.G.} - }
+\newcommand{\ie}{\textit{i.e.} }
+\newcommand{\IE}{\underline{I.E.} - }
+\newcommand{\NB}{\underline{N.B.} - }
+\newcommand{\expect}{\mathbb{E}}
+\newcommand{\prob}{\mathbb{P}}
+\newcommand{\argmax}{\mathrm{argmax}}
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\var}{\mathrm{Var}}
+\newcommand\doubleplus{+\kern-1.3ex+\kern0.8ex} % ++
+
+\newcommand{\definition}[1]{\stepcounter{definition} \textbf{Definition \arabic{section}.\arabic{definition}\ - }\textit{#1}\\}
+\newcommand{\Definition}[1]{\stepcounter{definition} \textbf{Definition \arabic{section}.\arabic{definition}\ - }\textit{#1}}
+\newcommand{\notation}[1]{\stepcounter{notation} \textbf{Notation \arabic{section}.\arabic{notation}\ - }\textit{#1}\\}
+\newcommand{\proof}[1]{\stepcounter{proof} \textbf{Proof \arabic{section}.\arabic{proof}\ - }\textit{#1}\\}
+\newcommand{\proposition}[1]{\stepcounter{proposition} \textbf{Proposition \arabic{section}.\arabic{proposition}\ - }\textit{#1}\\}
+\newcommand{\Proposition}[1]{\stepcounter{proposition} \textbf{Proposition \arabic{section}.\arabic{proposition}\ - }\textit{#1}}
+\newcommand{\theorem}[1]{\stepcounter{theorem} \textbf{Theorem \arabic{section}.\arabic{theorem} - }\textit{#1}\\}
+
+\renewcommand{\headrulewidth}{0pt}
+
+% Cover page title
+\title{Statistics 1 - Reviewed Notes}
+\author{Dom Hutchinson}
+\date{\today}
+\maketitle
+
+% Header
+\fancyhead[L]{Dom Hutchinson}
+\fancyhead[C]{Statistics 1 - Reviewed Notes}
+\fancyhead[R]{\today}
+
+\tableofcontents
+\newpage
+
+\section{General}
+
+\definition{Order Statistic}
+An \textit{Order Statistic} is a data set where the data has been placed in increasing order of value, not time.
+
+\subsection{Exploratory Data Analysis}
+
+\definition{Exploratory Data Analysis}
+\textit{Exploratory Data Analysis} is an approach to data analysis which focuses on summarising the main characteristics of the set
+
+\definition{Median}
+The \textit{Median} is the central value of a data set. For an odd-sized ($n=2m+1$) data set the median is $x_{(m+1)}$. For an even-sized ($n=2m$) data set the median is $\frac{1}{2}(x_m+x_{m+1})$.\\
+
+\definition{Sample Mean}
+The \textit{Sample Mean} is the average value of all data points within a sample. For a sample $\{x_1,\dots,x_n\}$
+$$\bar{x}:=\frac{1}{n}\sum_{i=1}^nx_i$$
+
+\definition{Trimmed Sample Mean}
+The \textit{Trimmed Sample Mean} is the average value of a subset of data points within a sample. The subset is defined to ignore the $\frac{\Delta}{2}\%$ largest \& smallest values of the sample. For a $\Delta\%$ trimmed mean we define
+$$\bar{x}_\Delta:=\frac{1}{n-2k}\sum_{i=k+1}^{n-k-1}x_i\ \mathrm{with}\ k=\left\lfloor\frac{n\Delta}{100}\right\rfloor$$
+
+\definition{Sample Variance}
+\textit{Sample Variance} is a measure of spread of data in a sample around the sample mean. For a sample $\{x_1,\dots,x_n\}$
+$$s^2:=\frac{1}{n-1}\sum_{i=1}^n(x_i-\bar{x})^2=\frac{1}{n-1}\left(\left(\sum_{i=1}^nx_i^2\right)-n\bar{x}\right)$$
+
+\definition{Hinges}
+\textit{Hinges} describe the spread of data in a sample, while trying to ignore extreme data. The \textit{Lower Hinge}, $H_1$, is the median of the set containing the median \& values with rank \underline{less} than the sample median . The \textit{Upper Hinge}, $H_3$, is the median of the set containing the median \& values with rank \underline{greater} than the sample median.\\
+
+\definition{Quartiles}
+\textit{Quartiles} describe the spread of data in a sample.  The \textit{Lower Quartile}, $Q_1$, is the median of the set of values with rank \underline{less} than the sample median . The \textit{Upper Quartile}, $Q_3$, is the median of the set of values with rank \underline{greater} than the sample median.\\
+\NB These sets do \underline{not} contain the median.\\
+
+\definition{Five-Number Summary}
+The \textit{Five-Number Summary} of a sample contains the sample's: median; lower hinge; upper hinge; minimum value; \& maximum value.\\
+
+\definition{Skew}
+\textit{Skew} describes the spread of values in a sample which are less than the median, relative to the spread of values greater than the median. A sample is \textit{Left-Skewed} if $H_3-H_2>H_1-H_2$. A sample is \textit{Right-Skewed} if $H_3-H_2<H_1-H_2$.
+
+\subsection{Graphical Plots}
+
+\definition{Histogram}
+A \textit{Histogram} is a plot used to visualise the shape \& distribution of a sample. A \textit{Histogram} can be produced by the following process
+\begin{enumerate}[label=\roman*)]
+	\item Divide the range of data values into $K$ intervals (bins) of equal width.
+	\item Counter the frequency of observations falling into each interval.
+	\item Display a plot of joined columns above each interval, with the columns height proportional to the count for that interval.
+\end{enumerate}
+
+\definition{Stem-and-Leaf Plot}
+A \textit{Stem-and-Leaf Plot} is a plot used to visualise the shape \& distribution of a sample. A \textit{Stem-and-Leaf Plot} gives more information about the data in a sample than a \textit{Histogram}, since it displays the value of each element. A \textit{Stem-and-Leaf Plot} can be produced by the following process
+\begin{enumerate}[label=\roman*)]
+	\item Truncate or round the data values so that all the variation is the in the last two, or three, significant figures;
+	\item Separate each data value into a stem (consisting of all digits except the last) and a leaf (last digit);
+	\item Write the stems in a vertical column, smallest to biggest, and draw a vertical line to separate from the right column;
+	\item Write each leaf in the row to the right of its corresponding stem, in increasing order;
+	\item Record any strikingly low or high values separately from the main stem, displaying the individual values in a group above the main stem or below.
+\end{enumerate}
+
+\subsection{$\chi^2$ Distribution}
+
+\definition{$\chi^2$ Distribution}
+Let $W$ be a random variable whose \textit{Moment Generating Function} $\mathcal{M}_W(t)=(1-2t)^{-r/2}$, with $r\in\mathbb{N}$ \& $t<1/2$, then $W\sim\chi^2_r$. Here $W$ is said to be distributed by the $\chi^2$ distribution with $r$ degrees of freedom.\\
+
+\theorem{Samples from Normal Distribution are $\chi^2$ Distributed}
+Let $X_1,\dots,X_n$ be a simple random sample from $N(\mu,\sigma^2)$. Then
+\[\begin{array}{rcl}
+\displaystyle{\sum_{i=1}^n\frac{(X_n-\mu)^2}{\sigma^2}}&\sim&\chi_n^2\\
+\displaystyle{\sum_{i=1}^n\frac{(X_n-\overline{X})^2}{\sigma^2}}&\sim&\chi_{n-1}^2
+\end{array}\]
+
+\subsection{$t$-Distribution}
+
+\definition{$t$-Distribution}
+Let $X, Y$ be irv with $X\sim N(0,1)$ \& $Y\sim\chi_r^2$. Define random variable $Z:=\dfrac{X}{\sqrt{Y/r}}\implies Z\sim t_r$. The $t$-distribution is shaped similarly to $N(0,1)$, but with heavier tails.\\
+
+\theorem{Distance between Sample Mean \& Population Mean}
+Let $X_1,\dots,X_n$ be a simple random sample from $N(\mu,\sigma^2)$. Then
+$$\frac{\sqrt{n}}{s}(\overline{X}-\mu)\sim t_{n-1}$$
+This allows us to estimate how far apart $\mu$ \& $\overline{X}$ are without knowing $\sigma^2$.
+
+\section{Parametric Models}
+
+\definition{Parametric Models}
+\textit{Parametric Models} are the class of statistical distributions whose probability mass/density function take parameters. These parameters represent values of interest in the population, such as mean or variance. We generally do not know these values so we estimate them from samples.\\
+
+\definition{Quantity of Interest}
+When analysing distributions it often helps to define \textit{Quantities of Interest} about the distributions (\eg Mean). These are defined as functions in terms of the parameters $\tau(\theta)$. We estimate \textit{Quantities of Interest} by passing estimated values of the parameters $\hat{\tau}=\tau(\hat{\theta})$.\\
+
+\definition{Joint Probability Density of Simple Random Sample}
+Let $X_1,\dots,X_n$ be iid random variables representing the values of a simple random sample. The probability of obtaining $x_1,\dots,x_n$ as the values obtained by a simple random sample is
+$$f_{X_1,\dots,X_n}(x_1,\dots,x_n)=\prod_{i=1}^nf_X(x_i;\theta)$$
+
+\section{Estimating Parameters}
+
+\definition{Likelihood Function}
+The \textit{Likelihood Function} provides an curve which estimates the parameters of a \textit{Parametric Distribution}, for an observed value of the distribution.
+\[\begin{array}{rcl}
+L(\theta;x)&:=&\begin{cases}p(x;\theta)&\mathrm{Discrete}\\f(x;\theta)&\mathrm{Continuous}\end{cases}\\
+L(\theta;x_1,\dots,x_n)&:=&\begin{cases}\displaystyle{\prod_{i=1}^n p_{X_i}(x_i;\theta)}&\mathrm{Discrete}\\\displaystyle{\prod_{i=1}^n f_{X_i}(x_i;\theta)}&\mathrm{Continuous}\end{cases}
+\end{array}\]
+
+\definition{Log-Likelihood Function}
+The \textit{Log-Likelihood Function} is the natural logarithm of the \textit{Likelihood Function}. Since the natural logarithm is an increasing function, the \textit{Log-Likelihood Function} has the same maximum as the \textit{Likelihood Function}. The \textit{Log-Likelihood Function} is useful when dealing with multiple observations since it requires the sum of the probability functions, rather than the product.
+\[\begin{array}{rcl}
+\ell(\theta;x)&:=&\ln L(\theta;x)\\
+\ell(\theta;x_1,\dots,x_n)&:=&\displaystyle{\sum_{i=1}^n\ln L(\theta;x_i)}
+\end{array}\]
+
+\definition{Maximum Likelihood Estimate}
+\textit{Maximum Likelihood Estimate} is a technique for estimating the parameters of a \textit{Parametric Distribution} using the \textit{Likelihood Function}. \textit{Maximum Likelihood Estimate} takes in a series of observations \& returns the parameters which are the most likely to cause these observations. Generally differentiation will be required to find this value.
+$$\hat{\theta}_{mle}:=\argmax_\theta L(\theta;x)$$
+For multiple observations $\hat{\theta}_{mle}$ can generally be found as the solution to
+$$0=\sum_{i=1}^n\frac{\partial}{\partial\theta}\ell(x_i;\hat{\theta}_{mle})$$
+To find the \textit{Maximum Likelihood Estimate} for \textit{Parametric Distributions} with multiple parameters we use the previous equation, taking the partial derivative wrt each parameter in turn \& then solve as a set of simultaneous equations. For a model with parameters $\alpha$ \& $\beta$ we have that $\hat{\alpha}_{mle}$ \& $\hat{\beta}_{mle}$ are the solutions to the following pair of simultaneous equations
+$$0=\sum_{i=1}^n\frac{\partial}{\partial\alpha}\ell(x_i;\hat{\alpha}_{mle},\hat{\beta}_{mle})\quad\&\quad0=\sum_{i=1}^n\frac{\partial}{\partial\beta}\ell(x_i;\hat{\alpha}_{mle},\hat{\beta}_{mle})$$
+\NB When given a distribution which is non-regular (\eg Uniform Distribution) it is best to work with $L(\theta)$ directly (by inspection).\\
+
+\definition{Method of Moments}
+\textit{Method of Moments} is a method for estimating the parameters of a \textit{Parametric Model}. The \textit{Method of Moments} states that we should equate $\expect(X^k;\hat{\pmb{\theta}}_{mom})=m_k$ and solve these for $k\in[0,m]$ (where $m$ is the number of parameters) as simultaneous equations.
+
+\section{Assessing Fit}
+
+\definition{Probability Plot}
+A \textit{Probability Plot} compares a sample against a theoretical model (using estimators). A \textit{Probability Plot} plots $F_X(y;\hat{\theta})$ against $\hat{F}(y)$ for $y\in\{x_1,\dots,x_n\}$. The closer a plot is to $y=x$ the better the estimator is.\\
+
+\definition{$(Q-Q)$ Plot}
+A \textit{Quartile Plot} compares a sample against a theoretical model (using estimators). A \textit{$(Q-Q)$ Plot} plots $F_X^{-1}(y;\hat{\theta})$ against $\hat{F}^{-1}(y)$ for $y\in\{x_1,\dots,x_n\}$. It is has to derive $\hat{F}^{-1}$ so we notice that $\hat{F}^{-1}\left(\frac{k}{n}\right)=x_{(k)}$ \& now plot $F_X^{-1}\left(\frac{k}{n};\hat{\theta}\right)$ against $x_{(k)}$. The closer a plot is to $y=x$ the better the estimator is.\\
+
+\definition{Sample Distribution}
+A \textit{Sampling Distribution} is the distribution of an estimator. This distribution depends on the sample \& not the population distribution.
+
+\definition{Bias}
+\textit{Bias} is the mean distance of the estimated value for a parameter, from its true value.
+$$\mathrm{Bias}(\hat{\theta};\theta):=\expect(\hat{\theta}-\theta;\theta)=\expect(\hat{\theta};\theta)-\theta$$
+\NB An estimator is unbiased if $\forall\ \theta,\ \mathrm{Bias}(\hat{\theta};\theta)=0$.\\
+
+
+\definition{Mean-Square Error}
+\textit{Mean-Square Error} is the mean distance of the estimated value for a parameter, from its true value.
+$$\mathrm{mse}(\hat{\theta};\theta):=\expect\left[(\hat{\theta}-\theta)^2;\theta\right]=\mathrm{Var}(\hat{\theta};\theta)+\mathrm{bias}(\hat{\theta};\theta)^2$$
+
+\definition{Simulation}
+\textit{Simulation} is the process of generating data sets from a given distribution. This provides an empirical approach to assessing estimators, rather than theoretical. Simulations only provide information about one scenario, only. We cannot deduce anything for other sample sizes or true values of the parameters.
+
+\section{Linear Regression}
+
+\definition{Linear Regression, Predictor Variables \& Response Variables}
+Consider a data set $\{x_1,\dots,x_n\}$ \& a definition for another variable $y_i=\alpha x_i+\beta$. Here $x_i$ is the \textit{Predictor Variable} \& $y_i$ is the \textit{Response Variable}. \textit{Linear Regression} is a technique for estimating the values of $\alpha$ \& $\beta$ from a sample $\{(x_1,y_1),\dots,(x_n,y_n)\}$.\\
+
+\definition{Linear Regression Model}
+The \textit{Linear Regression Model} states that $\expect(y_i|x_i)=\alpha+\beta x_i$ for some $\alpha,\beta\in\mathbb{R}$. The \textit{Linear Regression Model} assumes that the relationship between $x_i$ \& $y_i$ is of the form $y_i=\alpha+\beta x_i+e_i$ where $e_i$ is an error measure with $\expect(e_i)=0,\ \var(e_i)=\sigma^2\ \&\ \mathrm{Cov}(e_i,e_j)=0\ \forall\ i\neq j$.\\
+
+\theorem{Finding $\hat{\alpha}$ \& $\hat{\beta}$}
+Using the \textit{Linear Regression Model}, the \textit{Least-Squares Estimates} for $\alpha$ \& $\beta$ are the solutions $$\hat{\alpha},\hat{\beta}:=\argmin_{\alpha,\beta}\sum_{i=1}^n(y_i-(\alpha+\beta x_i))^2$$
+Which can be found explicitly as
+$$\hat{\beta}=\dfrac{ss_{xy}}{ss_{xx}}\quad\hat{\alpha}=\bar{y}-\hat{\beta}\bar{x}$$
+
+\definition{Fitted values}
+\textit{Fitted values} are the estimated values for $y_i$ using the estimated values for $\alpha$ \& $\beta$
+$$\hat{y}_i:=\hat{\alpha}+\hat{\beta}x_i$$
+
+\definition{Residual Values}
+\textit{Residual values} are the difference between observed values \& fitted values
+$$\hat{e}_i:=y_i-\hat{y}_i$$
+We define an error measure, the \textit{Residual Sum of Squares}
+$$\mathrm{RSS}:=\sum_{i=1}^n\hat{e}_i^2\equiv ss_{yy}-\frac{ss_{xy}^2}{ss_{xx}}$$
+We can produce a \textit{Residual Plot} by producing a bar chart with the \textit{Predictor Variable} on the $x$-axis \& residuals on $y$-axis.\\
+
+\definition{Best Predictor}
+We define the \textit{Best Predictor} to be an explicit equation for the \textit{Response Variable} in terms of the \textit{Predictor Variable}
+$$\hat{y}:=\hat{\alpha}+\hat{\beta}x$$
+We can plot this as a line on a graph \& plot the observed values as scatter points on the graph. This plot can be used to assess the quality of fit. If the fit seems poor we may want to increase the complexity of the model \eg $y=\alpha+\beta x+\gamma x^2$ etc.
+
+
+\section{Confidence}
+
+\definition{Percentage Points}
+\textit{Percentage Points}, $x_\alpha$ are values within a distribution which have a pre-determined likelihood, $\alpha$, of values in that distribution being greater than them.
+$$\prob(X\geq x_\alpha)=\alpha$$
+
+\definition{Confidence Interval}
+Consider a simple random sample $X_1,\dots,X_n$. We define a $100(1-\alpha)\%$ \textit{Confidence Interval} (for $\alpha\in(0,1$) for a parameter $\theta$ to be the interval $[c_l,c_u]$ where the probability of the true value of the parameter being in this interval is $1-\alpha$.
+$$\prob(c_l\leq\theta^*\leq c_u;\theta)\geq1-\alpha$$
+\NB We define $|c_u-c_l|$ to be the \textit{Length} of the confidence interval.\\
+
+\proposition{Finding Confidence Intervals - Normal Distribution}
+Consider finding a confidence interval for $\mu$ using a sample from $N(\mu,\sigma^2_0)$, with $\sigma^2_0$ known. We know $\overline{X}\sim N(\mu,\frac{1}{n}\sigma_0^2)$ and $\frac{\overline{X}-\mu}{\sigma_0/\sqrt{n}}\sim N(0,1)$. Thus we find the confidence interval by rearranging the following to be in terms of $\mu$.
+$$\prob\left(-z_{\alpha/2}\leq\dfrac{\overline{X}-\mu}{\sigma_0/\sqrt{n}}\leq z_{\alpha/2};\mu,\sigma_0^2\right)=1-\alpha$$
+Consider finding a confidence interval for $\mu$ using a sample from $N(\mu,\sigma^2)$, with $\sigma^2$ unknown. We know that $\frac{\overline{X}-\mu_0}{s/\sqrt{n}}\sim t_{n-1}$ thus we find the confidence interval by rearranging the following to be in terms of $\mu$.
+$$\prob\left(-t_{n-1;\alpha/2}\leq\dfrac{\overline{X}-\mu}{\sigma_0/\sqrt{n}}\leq t_{n-1;\alpha/2};\mu,\sigma^2\right)=1-\alpha$$
+Consider finding a confidence interval for $\sigma^2$ using a sample from $N(\mu,\sigma^2)$, with $\mu$ unknown. We know that $\frac{1}{\sigma^2}\sum_{i=1}^n(X_i-\overline{X})^2\sim\chi_{n-1}^2$ then we find the confidence interval by rearranging the following to be in terms of $\sigma^2$.
+$$\prob\left(\chi^2_{n-1;1-\frac{\alpha}{2}}\leq\frac{1}{\sigma^2}\sum_{i=1}^n(X_i-\overline{X})^2\leq\chi^2_{n-1;\frac{\alpha}{2}};\mu,\sigma^2\right)=1-\alpha$$
+
+
+\Proposition{Affecting Confidence Interval Length}
+\begin{enumerate}
+	\item Increasing sample size decrease confidence interval length;
+	\item Increasing population variance increases confidence interval length; and,
+	\item Increasing confidence level, $\alpha$, increases confidence interval length.
+\end{enumerate}
+
+\section{Hypothesis Testing}
+
+\definition{Hypothesis Testing}
+\textit{Hypothesis Testing} is the process of evaluating whether a sample is consistent with one of two contrasting statements about the population parameters. The statement which is deemed true, unless proved otherwise, is called the \textit{Null Hypothesis}, $H_0$. The other statement is called the \textit{Alternative Hypothesis}, $H_1$. There are two types of \textit{Hypothesis Tests}: two-tailed ($\theta\neq\alpha$); or, one-tailed ($\theta>\alpha$ or $\theta<\alpha$). It is important to pay attention to which sort of test we are using as it affects the confidence level.\\
+
+\proposition{Comparing Two Groups}
+Some \textit{Hypothesis Tests} require the comparison of two groups. There are two possible relationships between the provided examples
+\begin{enumerate}
+	\item \textit{Independent Samples} - The two groups are independent of one another \& thus can be modelled by different population distributions.
+	\item \textit{Paired Samples} - The samples represent two observations from each member of the population (each member appears in both samples).\\
+	\eg Patients given drug $A$ \& then drug $B$, some time later.
+\end{enumerate}
+We can often combine two samples into a single distribution by comparing sample means \& then proceeding as if a single sample test.\\
+
+\proposition{Pooled Variance}
+If we can assume that two \textit{Independent Samples} ($X$ of size $m$ \& $Y$ of size $n$) have the \underline{same} variance we can define a \textit{Pooled Variance}
+$$s_p^2:=\frac{\left(\sum_{i=1}^m(X_i-\overline{X})^2\right)+\left(\sum_{i=1}^n(Y_i-\overline{Y})^2\right)}{m+n-2}$$
+Then we can define test statistic $$T=\dfrac{\overline{X}-\overline{Y}}{s_p\sqrt{(1/m)+(1/n)}}\sim t_{m+n-2}$$
+
+\Definition{Types of Error}
+\begin{enumerate}
+	\item A \textit{Type I Error} is when the \textit{Null-Hypothesis} is rejected, when in fact it is true. \ie False Negative.
+	\item A \textit{Type II Error} is when the \textit{Null-Hypothesis} is accepted, when in fact the \textit{Alternative Hypothesis} is true. \ie False Positive.
+\end{enumerate}
+
+\definition{Power}
+The \textit{Power} of a \textit{Hypothesis test} is the probability of correctly identifying the \textit{Alternative Hypothesis} as true
+$$\mathrm{Power}:=1-\prob(\mathrm{Type\ II\ Error})$$
+
+\Proposition{Hypothesis Testing Procedure}
+\begin{enumerate}[label=\arabic*)]
+	\item State \textit{Model Assumptions} for distribution \& independence of variables.
+	\item State \textit{Null Hypothesis} \& \textit{Alternative Hypothesis};
+	\item Choose an appropriate \textit{Test Statistic}, $T$, \& calculate its value, $t_{obs}$, using observations from sample.
+	\item Compute the $p$-value for the test statistic value;\\
+	\ie Probability of a sample having the calculated observed value, assuming $H_0$ is true.\\
+	\eg If $H_1:\mu>\mu_0\implies p=\prob(T\geq t_{obs}|H_0\ \mathrm{true})$.
+	\item Make conclusions about whether there is sufficient evidence to reject the \textit{Null Hypothesis}.
+\end{enumerate}
+
+\proposition{Which Test Statistic to use when comparing means}
+\begin{tabular}{|l|l|l|l|}
+\hline Test Name&Samples&Variance?&Test Statistic, $T$\\
+\hline One-Sample $t$-Test&Single Sample&Known&$\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)$\\\hline
+One-Sample $t$-Test&Single Sample&\textbf{Un}known&$\frac{\overline{X}-\mu}{s/\sqrt{n}}\sim t_{n-1}$\\\hline
+Pooled Two-Sample $t$-Test&Independent Samples&Equal&$\frac{\overline{X}-\overline{Y}}{s_p\sqrt{(1/m)+(1/n)}}\sim t_{m+n-2}$\\\hline
+Welch Two-Sample $t$-Test&Independent Samples&\textbf{Un}equal&$\frac{\overline{X}-\overline{Y}}{\sqrt{(\widehat{\sigma^2_X}/m)+(\widehat{\sigma^2_Y}/n)}}\sim t_\nu$\\\hline
+Paired Two-Sample $t$-test&Paired Samples&&$W_i:=X_i-Y_i\sim N(\mu_W,\sigma^2_W)$\\
+&&&$\implies\frac{\overline{W}-\mu_W}{s_W/\sqrt{n}}\sim t_{n-1}$\\\hline
+\end{tabular}\\
+\NB $v:=\displaystyle{\frac{((s_X^2/m)+(s_Y^2/n))^2}{\frac{1}{m-1}(s_X^2/m)^2+\frac{1}{n-1}(s_Y^2/n)^2}}$.\\
+
+\definition{Critical Region}
+Defining a \textit{Critical Region} is an alternative approach to testing two hypotheses about population parameters. Here we calculate the value(s), $c^*$, such that if a certain observed value falls on the wrong side of this value(s) then $H_0$ is rejected. These value(s) are called \textit{Critical Value(s)}, $c^*$.\\
+
+\proposition{Linear Regression \& Hypothesis Tests}
+In order to perform \textit{Hypothesis Test} on the results of \textit{Linear Regression} we define $y_i=\alpha+\beta x_i+e_i$ where $e_1,\dots,e_n$ are iid $N(0,\sigma^2)$. Here $\alpha,\beta\ \&\ \sigma^2$ are unknown. Since $e_i$ are normal distributed we have
+$$\hat{\alpha}\sim N\left(\alpha,\frac{\sigma^2}{nss_{xx}}\sum_{i=1}^nx_i^2\right)\quad\hat{\beta}\sim N\left(\beta,\frac{\sigma^2}{ss_{xx}}\right)$$
+By defining estimates for the standard deviation of $\hat{\alpha}$ \& $\hat{\beta}$ as $s_{\hat{\alpha}}:=\sqrt{\frac{\widehat{\sigma^2}}{nss_{xx}}\sum_{i=1}^nx_i^2}$ \&\\ $s_{\hat{\beta}}:=\sqrt{\widehat{\sigma^2}/ss_{xx}}$. Then
+$$\frac{\hat{\alpha}-\alpha^*}{s_{\hat{\alpha}}}\sim t_{n-2}\quad\frac{\hat{\beta}-\beta^*}{s_{\hat{\beta}}}\sim t_{n-2}$$
+\newpage
+\setcounter{section}{-1}
+\section{Reference}
+
+\subsection{Definitions}
+
+\definition{Empirical Distribution Function}
+For a simple random sample $(X_1,\dots,X_n)$ the \textit{Empirical Distribution Function} is an estimate of the cumulative frequency function. \textit{Empirical Distribution Function} is defined as
+$$\hat{F}(y):=\frac{1}{n}\left|\{X_i\leq y\}\right|$$
+
+\definition{Moment Generating Function}
+The \textit{Moment Generating Function} is a real-valued function that uniquely describes a probability distribution. Two distributions with the same \textit{Moment Generating Function} are equivalent.
+\[\begin{array}{rrclcl}
+\mathrm{Population}&\mathcal{M}_X(s)&:=&\expect\left(e^{kX}\right)&=&\displaystyle{\int_{-\infty}^\infty e^{kx}f_X(x)dx}\\
+\mathrm{Joint Population}&\mathcal{M}_{X,Y}(s,t)&:=&\expect\left(e^{sX+tY}\right)&=&\mathcal{M}_X(s)\mathcal{M}_Y(t)\\
+\mathrm{Sample}&m_k&:=&\displaystyle{\frac{1}{n}\sum_{i=1}^nx_i^k}
+\end{array}\]
+
+\definition{Simple Random Sample}
+A \textit{Simple Random Sample} is an discrete, unbiased sample from a population. The likelihood of a particular element being in the sample depends upon the distribution of the population.
+
+
+\subsection{Notation}
+
+\definition{Estimation}
+$\hat{\theta}$ denotes an estimation. $\theta^*$ denotes the true value. $\hat{\tau}=\tau(\hat{\theta})$ denotes applying an estimation of $\theta$ to a function $\tau$ of $\theta$.\\
+
+\notation{Order Statistic}
+For a data set $D=\{x_1,\dots,x_n\}$ we denote the $i^{th}$ smallest value as $x_{(i)}$.
+
+\notation{Percentage Points}
+For \textit{Percentage Points} different notation is used for different distributions\\
+\begin{tabular}{|l|l|}
+\hline
+RV&Notation\\
+\hline
+$Z\sim N(0,1)$&$\prob(Z\geq z_\alpha)=\alpha$\\
+$T\sim  t_r$&$\prob(T\geq t_{r,\alpha})=\alpha$\\
+$W\sim  \chi^2_r$&$\prob(W\geq \chi^2_{r,\alpha})=\alpha$\\
+\hline
+\end{tabular}\\
+
+\notation{Summary Statistics}
+For samples of equal size $X=\{x_1,\dots,x_n\}$ \& $Y=\{y_1,\dots,y_n\}$ we define
+\[\begin{array}{rcl|rcl}
+\bar{x}&=&\frac{1}{n}\sum_{i=1}^nx_i&\bar{y}&=&\frac{1}{n}\sum_{i=1}^ny_i\\
+ss_{xx}&=&\left(\sum_{i=1}^nx_i^2\right)-n\bar{x}^2&ss_{yy}&=&\left(\sum_{i=1}^ny_i^2\right)-n\bar{y}^2\\
+ss_{xy}&=&\left(\sum_{i=1}^nx_iy_i\right)-n\bar{x}\bar{y}
+\end{array}\]
+
+\subsection{Theorems}
+
+\theorem{Central Limit Theory}
+Let $X_1,\dots,X_n$ be iid rv from a random sample of a population with mean $\expect(X)$ \& variance $\sigma^2=\mathrm{Var}(X)$. Then, for sufficiently large $n$
+$$\dfrac{\bar{X}-\mu}{\sigma/\sqrt{n}}\simeq N(0,1)$$
+Since the distribution of $X$ may only allow discrete values but the normal distribution is continuous we perform \textit{Continuity Correction}
+\[\begin{array}{rcl}
+\prob(X=x)&\simeq&\prob\left(x-\frac{1}{2}\leq X\leq x+\frac{1}{2}\right)\\
+\prob(X\leq x)&\simeq&\prob\left(X\leq x+\frac{1}{2}\right)
+\end{array}
+\]
+
+\theorem{Independence of Sample Mean \& Mean-Square Distance}
+Let $X_1,\dots,X_n$ be iid rv distributed with $N(\mu,\sigma^2)$ then
+\begin{center}
+$\overline{X}$ \& $\displaystyle{\sum_{i=1}^n\left(X_j-\bar{X}\right)^2}$ are independent.
+\end{center}
+
+\theorem{Moment Generating Function Identities}
+\[\begin{array}{rcl}
+\mathcal{M}_{aX+b}(t)&=&\expect\left(e^{atX+bt}\right)=e^{tb}\mathcal{M}_X(ta)\\
+\mathcal{M}_X(s)&=&\mathcal{M}_{X,Y}(s,0)\\
+\mathcal{M}_Y(t)&=&\mathcal{M}_{X,Y}(0,t)\\
+\mathcal{M}_{X_1+\dots+X_n}(s)&=&\mathcal{M}_{X_1}(s)\dots\mathcal{M}_{X_n}(s)
+\end{array}\]
+
+\theorem{Transformations of Normal Distribution}
+Let $X\sim N(\mu,\sigma^2)$. Then
+\[\begin{array}{rcl}
+aX+b&\sim&N(a\mu+b,a^2\sigma^2)\\
+\sum_i a_iX_i&\sim&N\left(\sum_ia_i\mu_i,\sum_ia_i^2\sigma^2\right)
+\end{array}\]
+
+\theorem{$\chi^2$ Distribution Identities}
+Let $W\sim\chi_r^2$ then
+\[\begin{array}{rcll}
+X&\sim&\Gamma\left(\frac{r}{2},\frac{1}{2}\right)\\
+N(0,1)^2&\simeq&\chi_1^2\\
+X+Y&\sim&\chi_{r+s}^2&\mathrm{for}\ X\sim\chi_r^2,\ Y\sim\chi_s^2
+\end{array}\]
+
+\theorem{$t$ Distribution Identities}
+Let $X\sim t_r$ then
+\[\begin{array}{rcll}
+\mathrm{As}\ r\to\infty&\mathrm{then}&X\sim N(0,1)
+\end{array}\]
+
+\newpage
+\subsection{Probability Distributions}
+
+\definition{Binomial Distribution}
+Let $X$ be a discrete random variable modelled by a \textit{Binomial Distribution} with $n$ events and rate of success $p$.\\
+\[\begin{array}{rcl}
+p_X(k)&=&{n\choose k}p^k(1-p)^{n-k}\\
+\expect(X)&=&np\\
+\var(X)&=&np(1-p)
+\end{array}\]
+
+\definition{Gamma Distribution}
+Let $T$ be a continuous randmo variable modelled by a \textit{Gamma Distribution} with shape parameter $\alpha$ \& scale parameter $\lambda$. Then
+\[\begin{array}{rcll}
+f_T(x)&=&\dfrac{\lambda^\alpha x^{\alpha-1}e^{-\lambda x}}{\Gamma(\alpha)}&\mathrm{for\ }x>0\\
+\expect(T)&=&\dfrac{\alpha}{\lambda}\\
+\var(T)&=&\dfrac{\alpha}{\lambda^2}
+\end{array}\]
+\NB $\alpha,\lambda>0$.\\
+
+\definition{Exponential Distribution}
+Let $T$ be a continuous random variable modelled by a \textit{Exponential Distribution} with parameter $\lambda$. Then
+\[\begin{array}{rcll}
+f_T(t)&=&\lambda e^{-\lambda t}&\mathrm{for\ }t>0\\
+F_T(t)&=&1-e^{-\lambda t}&\mathrm{for\ }t>0\\
+\expect(X)&=&\frac{1}{\lambda}\\
+\var(X)&=&\frac{1}{\lambda^2}
+\end{array}\]
+
+\definition{Normal Distribution}
+Let $X$ be a continuous random variable modelled by a \textit{Normal Distribution} with mean $\mu$ \& variance $\sigma^2$.\\
+Then
+\[\begin{array}{rcl}
+f_X(x)&=&\dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}\\
+F_X(x)&=&\displaystyle{\dfrac{1}{\sqrt{2\pi\sigma^2}}\int_{-\infty}^xe^{-\frac{(y-\mu)^2}{2\sigma^2}}dy}\\
+\mathcal{M}_X(\theta)&=&e^{\mu\theta+\sigma^2\theta^2(1/2)}\\
+\expect(X)&=&\mu\\
+\var(X)&=&\sigma^2
+\end{array}\]
+
+\definition{Poisson Distribution}
+Let $X$ be a discrete random variable modelled by a \textit{Poisson Distribution} with parameter $\lambda$. Then
+\[\begin{array}{rcll}
+p_X(k)&=&\frac{e^{-\lambda}\lambda^k}{k!}&\mathrm{for\ }k\in\mathbb{N}_0\\
+\expect(X)&=&\lambda\\
+\var(X)&=&\lambda
+\end{array}\]
+
+\definition{$\chi^2$ Distribution}
+Let $X$ be a random variable modelled by the \textit{$\chi^2$ Distribution} with $r$ degrees for freedom. Then
+\[\begin{array}{rcl}
+\mathcal{M}_X(t)&=&(1-2t)^{-r/2}\\
+\expect(X)&=&r\\
+\var(X)&=&2r
+\end{array}\]
+
+\definition{$t2$ Distribution}
+Let $X$ be a random variable modelled by the \textit{$t$-Distribution} with $r$ degrees for freedom. Then
+\[\begin{array}{rcl}
+\expect(X)&=&0\\
+\var(X)&=&\dfrac{r}{r-2}
+\end{array}\]
+
+\end{document}
